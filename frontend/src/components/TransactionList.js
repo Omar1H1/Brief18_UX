@@ -68,24 +68,20 @@ export default function TransactionList() {
     return groups;
   }, {});
 
-  const getCategoryColor = (categoryId) => {
-    const category = categories.find(c => c.id === categoryId);
-    return category ? category.color : '#gray';
-  };
 
   return (
     <div className="transaction-list">
       <h2>Transactions</h2>
-      <button className="fab-button" onClick={() => setShowNewForm(true)}>+</button>
+      <button className="fab-button" onClick={() => setShowNewForm(true)} aria-label={"bouton pour ajouter une transaction"}>+</button>
       
-      {Object.entries(groupedTransactions).map(([date, transactions]) => (
+      {categories && Object.entries(groupedTransactions).sort().map(([date, transactions]) => (
         <div key={date} className="date-group">
           <h3>{date}</h3>
           {transactions.map(transaction => (
             <div key={transaction.id} className="transaction-item">
               <div 
                 className="category-color-indicator"
-                style={{ backgroundColor: getCategoryColor(transaction.categoryId) }}
+                style={{ backgroundColor: transaction.categoryColor}}
               />
               <div className="transaction-content">
                 <div className="transaction-title">{transaction.title}</div>

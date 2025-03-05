@@ -33,7 +33,8 @@ export default function PaymentMethodList() {
     if (window.confirm('Are you sure you want to delete this payment method?')) {
       try {
         await deletePaymentMethod(auth, methodId);
-        setPaymentMethods(paymentMethods.filter(method => method.id !== methodId));
+        setPaymentMethods(prevPaymentMethods => prevPaymentMethods.filter(method => method.id !== methodId));
+        console.log(paymentMethods[0].id);
       } catch (error) {
         console.error('Failed to delete payment method:', error);
       }
@@ -43,7 +44,7 @@ export default function PaymentMethodList() {
   return (
     <div className="payment-method-list">
       <h2>Payment Methods</h2>
-      <button className="fab-button" onClick={() => setShowNewForm(true)}>+</button>
+      <button className="fab-button" onClick={() => setShowNewForm(true)} aria-label={"bouton pour ajouter un moyen de paiement"}>+</button>
       
       <div className="payment-methods">
         {paymentMethods.map(method => (
