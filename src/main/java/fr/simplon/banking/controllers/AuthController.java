@@ -1,8 +1,10 @@
 package fr.simplon.banking.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,6 +84,29 @@ public class AuthController {
         
         String jwt = tokenProvider.generateToken(authentication.getName());
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, user.getId(), user.getUsername()));
+    }
+
+    @GetMapping("/validate")
+    public ResponseEntity<JwtAuthenticationResponse> validateToken(
+            @RequestHeader("Authorization") String authorizationHeader
+    ) {
+        String token = authorizationHeader.substring(7);
+
+        try {
+            String username = tokenProvider.getUsernameFromJWT(token);
+
+            if (tokenProvider.validateToken(token)) {
+                User user = userRepository.findByUsername(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+                return ResponseEntity.ok(
+                        new JwtAuthenticationResponse(token, user.getId(), user.getUsername())
+                );
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
     
 }

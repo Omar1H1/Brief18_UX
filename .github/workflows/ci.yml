@@ -1,0 +1,28 @@
+name: LIGHTHOUSE ACCES CI
+on:
+  push:
+    branches:
+      - main
+jobs:
+  lighthouseci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Installer les dépendances depuis npm public
+        run: cd frontend && npm install --no-cache --prefer-online
+
+      - name: Installer Lighthouse CI
+        run: cd frontend && npm install -g @lhci/cli@0.14.x
+
+      - name: Build project
+        run: cd frontend && npm run build
+
+      - name: Run Lighthouse CI
+        run: cd frontend &&lhci autorun

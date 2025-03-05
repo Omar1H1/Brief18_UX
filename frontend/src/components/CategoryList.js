@@ -9,13 +9,13 @@ export default function CategoryList() {
   const [showNewForm, setShowNewForm] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
-    color: '#000000',
+    color: '#ffffff',
     limit: ''
   });
 
   useEffect(() => {
     getCategories(auth).then(setCategories);
-  }, [auth]);
+  }, [auth, categories]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ export default function CategoryList() {
     if (window.confirm('Are you sure you want to delete this category?')) {
       try {
         await deleteCategory(auth, categoryId);
-        setCategories(categories.filter(cat => cat.id !== categoryId));
+        setCategories(prevCategories => prevCategories.filter(cat => cat.id !== categoryId));
       } catch (error) {
         console.error('Failed to delete category:', error);
       }
@@ -42,56 +42,56 @@ export default function CategoryList() {
   };
 
   return (
-    <div className="category-list">
-      <h2>Categories</h2>
-      <button className="fab-button" onClick={() => setShowNewForm(true)}>+</button>
-      
-      <div className="categories">
-        {categories.map(category => (
-          <div key={category.id} className="category-item" style={{ backgroundColor: category.color }}>
-            <div className="category-content">
-              <div className="category-name">{category.name}</div>
-              {category.limit && <div className="category-limit">Limit: ${category.limit}</div>}
-            </div>
-            <button 
-              className="delete-button"
-              onClick={() => handleDelete(category.id)}
-              aria-label={`Delete ${category.name} category`}
-            >
-              🗑️
-            </button>
-          </div>
-        ))}
-      </div>
+      <div className="category-list">
+        <h2>Categories</h2>
+        <button className="fab-button" onClick={() => setShowNewForm(true)} aria-label={"bouton pour ajouter une catégorie"}>+</button>
 
-      <Modal
-        isOpen={showNewForm}
-        onClose={() => setShowNewForm(false)}
-        title="New Category"
-      >
-        <form onSubmit={handleSubmit} className="category-form">
-          <input
-            type="text"
-            placeholder="Category Name"
-            value={formData.name}
-            onChange={e => setFormData({...formData, name: e.target.value})}
-            required
-          />
-          <input
-            type="color"
-            value={formData.color}
-            onChange={e => setFormData({...formData, color: e.target.value})}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Monthly Limit (optional)"
-            value={formData.limit}
-            onChange={e => setFormData({...formData, limit: e.target.value})}
-          />
-          <button type="submit">Create Category</button>
-        </form>
-      </Modal>
-    </div>
+        <div className="categories">
+          {categories.map(category => (
+              <div key={category.id} className="category-item" style={{ backgroundColor: category.color }}>
+                <div className="category-content">
+                  <div className="category-name">{category.name}</div>
+                  {category.limit && <div className="category-limit">Limit: ${category.limit}</div>}
+                </div>
+                <button
+                    className="delete-button"
+                    onClick={() => handleDelete(category.id)}
+                    aria-label={`Delete ${category.name} category`}
+                >
+                  🗑️
+                </button>
+              </div>
+          ))}
+        </div>
+
+        <Modal
+            isOpen={showNewForm}
+            onClose={() => setShowNewForm(false)}
+            title="New Category"
+        >
+          <form onSubmit={handleSubmit} className="category-form">
+            <input
+                type="text"
+                placeholder="Category Name"
+                value={formData.name}
+                onChange={e => setFormData({...formData, name: e.target.value})}
+                required
+            />
+            <input
+                type="color"
+                value={formData.color}
+                onChange={e => setFormData({...formData, color: e.target.value})}
+                required
+            />
+            <input
+                type="number"
+                placeholder="Monthly Limit (optional)"
+                value={formData.limit}
+                onChange={e => setFormData({...formData, limit: e.target.value})}
+            />
+            <button type="submit">Create Category</button>
+          </form>
+        </Modal>
+      </div>
   );
 }

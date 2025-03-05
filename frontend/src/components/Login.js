@@ -11,21 +11,28 @@ export default function Login() {
   const { login, register } = useAuth();
   const [authLoading, setAuthLoading] = useState(false);
 
+  const toggleMode = () => {
+    setIsLogin((prev) => !prev);
+    setError('');
+  };
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setAuthLoading(true);
     setError('');
-    
-    const success = isLogin 
-      ? await login(username, password)
-      : await register(username, password);
-    
-    if (!success) {
-      setError(isLogin ? 'Login failed' : 'Registration failed');
-    }
-    setAuthLoading(false);
 
-  }, [isLogin, username, password, login, register, setAuthLoading]);
+    try {
+      if (isLogin) {
+        await login(username, password);
+      } else {
+        await register(username, password);
+      }
+    } catch (error) {
+      console.error(isLogin ? 'Login failed:' : 'Registration failed:', error);
+      setError(isLogin ? 'Login failed' : 'Registration failed');
+    } finally {
+      setAuthLoading(false);
+    }
+  }, [isLogin, username, password, login, register]);
 
   return (
     <div className="login-container">
@@ -50,7 +57,7 @@ export default function Login() {
           {isLogin ? 'Login' : 'Register'}
         </button>
       </form>
-      <button onClick={() => setIsLogin(!isLogin)}>
+      <button onClick={toggleMode}>
         {isLogin ? 'Need to register?' : 'Already have an account?'}
       </button>
     </div>

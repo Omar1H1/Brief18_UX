@@ -13,3 +13,12 @@ export async function register(username, password) {
     body: JSON.stringify({ username, password })
   });
 };
+
+export async function validateToken(token) {
+  return apiRequest('/api/auth/validate', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+};
