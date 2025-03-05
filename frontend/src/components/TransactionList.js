@@ -89,7 +89,7 @@ export default function TransactionList() {
               />
               <div className="transaction-content">
                 <div className="transaction-title">{transaction.title}</div>
-                <div className="transaction-amount">{formatAmount(transaction.amount)}€</div>
+                <div className="transaction-amount">- {formatAmount(transaction.amount)}€</div>
               </div>
             </div>
           ))}
