@@ -68,7 +68,6 @@ export default function TransactionList() {
     return groups;
   }, {});
 
-
   return (
     <div className="transaction-list">
       <h2>Transactions</h2>
