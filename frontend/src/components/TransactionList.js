@@ -68,13 +68,6 @@ export default function TransactionList() {
     return groups;
   }, {});
 
-  const getCategoryColor = (categoryId) => {
-    const category = categories.find(c => c.id == categoryId);
-
-    console.log(categoryId);
-    return category ? category.color : '#gray';
-  };
-
   return (
     <div className="transaction-list">
       <h2>Transactions</h2>

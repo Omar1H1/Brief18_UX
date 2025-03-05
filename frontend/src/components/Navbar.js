@@ -13,7 +13,6 @@ export default function Navbar() {
   };
 
   const handleMenuBurger = () => {
-    const navLinks = document.querySelector('.nav-links');
     setIsOpen(prevIsOpen => !prevIsOpen);
   }
 
